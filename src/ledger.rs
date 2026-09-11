@@ -238,8 +238,8 @@ where
 
         // 2. Walk up the tree and remove any reference until we meet a node that bifurcates
         let mut node = self.parent.as_ref().unwrap().clone();
-        loop {
-            let access_node = node.upgrade().unwrap();
+        // WARN: For unknown reason, the parent reference is not always valid, so we need to check for that
+        while let Some(access_node) = node.upgrade() {
             access_node.children.write().remove(&event_type);
             event_type = access_node.event.clone();
 
